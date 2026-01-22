@@ -25,7 +25,10 @@ const server = createServer(app);
 // Socket.io setup
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: [
+      process.env.FRONTEND_URL || "http://localhost:5173",
+      process.env.MOBILE_URL || "http://192.168.108.232:8081"
+    ],
     methods: ["GET", "POST"]
   }
 });
@@ -53,7 +56,10 @@ io.on('connection', (socket) => {
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  origin: [
+    process.env.FRONTEND_URL || "http://localhost:5173",
+    process.env.MOBILE_URL || "http://192.168.108.232:8081"
+  ],
   credentials: true
 }));
 app.use(morgan('combined'));
@@ -93,7 +99,7 @@ const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
   console.log(`🚀 SeeIt Backend running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV}`);
-  console.log(`🌐 CORS enabled for: ${process.env.FRONTEND_URL}`);
+  console.log(`🌐 CORS enabled for: ${process.env.FRONTEND_URL} and ${process.env.MOBILE_URL}`);
 });
 
 export default app;

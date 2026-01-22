@@ -1,5 +1,5 @@
 // API service for React Native
-const API_BASE = __DEV__ ? 'http://10.0.2.2:3001' : 'https://your-production-api.com'; // Android emulator uses 10.0.2.2 for localhost
+const API_BASE = __DEV__ ? 'http://192.168.108.232:3001' : 'https://your-production-api.com'; // Your laptop's IP for ethernet connection
 
 export interface ReportFormData {
   category: string;
@@ -35,7 +35,7 @@ export interface ApiResponse<T> {
 }
 
 class ApiService {
-  private async request<T>(
+  protected async request<T>(
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
@@ -146,7 +146,7 @@ export class PoliceApiService extends ApiService {
     this.token = token;
   }
 
-  private getAuthHeaders() {
+  private getAuthHeaders(): Record<string, string> {
     return this.token ? { Authorization: `Bearer ${this.token}` } : {};
   }
 

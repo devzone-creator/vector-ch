@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Report {
+  id           String     @id @default(uuid())
+  anonymousId  String     @unique  // Generated: "anon_<random>"
+  type         String     // RUBBISH, UNSAFE_AREA, SUSPICIOUS_ACTIVITY, VANDALISM
+  severity     String     @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  latitude     Float
+  longitude    Float
+  location     String     // Human readable location
+  description  String?
+  mediaUrls    String     // JSON array of media URLs
+  status       String     @default("SUBMITTED") // SUBMITTED, REVIEWING, IN_PROGRESS, RESOLVED, REJECTED
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  responseTime Int?       // In minutes, when resolved
+  
+  // Police response fields
+  assignedTo   String?    // Police badge ID
+  internalNotes String?   // Police internal notes
+  resolvedAt   DateTime?
+  
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+  @@index([severity])
+}
+
+model PoliceUser {
+  id       String   @id @default(uuid())
+  badgeId  String   @unique
+  password String   // Hashed
+  name     String
+  station  String
+  isActive Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
